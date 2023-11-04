@@ -1,0 +1,100 @@
+create database restaurant;
+
+use restaurant;
+
+select * from cities;
+
+select * from meal_types;
+
+select * from meals;
+
+select * from members;
+
+select * from monthly_member_totals;
+
+select * from restaurant_types;
+
+select * from restaurants;
+
+select * from serve_types;
+
+select * from orders;
+
+select * from order_details;
+
+#query for most order meal type
+
+select meal_type_id,count(meal_type_id) as "Total_meal_type_order" from meals group by (meal_type_id) order by total_meal_type_order desc;
+
+#Query for joining meals and restaurant_types table to get the restaurant type and meals together
+
+select * from meals join restaurant_types on meals.restaurant_id=restaurant_types.id;
+
+#Query for average income precentage of every restaurant
+
+select restaurant_type_id,avg(income_persentage) from restaurants group by (restaurant_type_id);
+
+#Query for getting data of  total members from different cities order in highest to lowest
+
+select city,count(city) as "Total_member_from_city" from monthly_member_totals group by(city) order by total_member_from_city desc;
+
+#query for getting the order count according to serve type
+
+select serve_type_id,count(price) from meals group by(serve_type_id);
+
+#query for data which have homemade restuarant type
+
+select * from restaurants where restaurant_type_id=4;
+
+#query for data of member whose email id end with "com"
+
+select * from members where email like "%com";
+
+#query for data of members whose budget lies in range of 500 to 1100
+
+select * from monthly_member_totals where monthly_budget between 500 and 1100;
+
+#query for data of top 2 city having female member
+
+select city_id,count(sex) as "Total_no_of_people" from members where sex="F" group by (city_id)order by "Total_no_of_people" desc limit 2;
+
+#query for data of members who have total expenses more than monthly budget
+
+select * from monthly_member_totals where total_expense>monthly_budget;
+
+#query for data of only restaurant where income precentage is minimum
+
+select * from restaurants where income_persentage=(select min(income_persentage) from restaurants);
+
+# query for joining two table of meal and meal type
+
+select * from meals join meal_types on meals.meal_type_id=meal_types.id;
+
+#Query for data of restaurant joining with restaurant type where city id is 3
+select r.*,rt.restaurant_type from restaurants as r join restaurant_types as rt on r.restaurant_type_id=rt.id where r.city_id=3;
+
+#Query for arranging the data in descending of monthly members totlals on basis of monthly budget
+
+select * from monthly_member_totals order by monthly_budget desc;
+
+#Query for checking the data whether it has null value or not
+select * from meals where serve_type_id is null;
+
+#query for data of only those who have maximum order count
+select first_name,surname,sex,email,city,order_count from monthly_member_totals where order_count=(select max(order_count) from monthly_member_totals);
+
+#query for data of member joining with city name only where city id is 2 and 5 budget in range of 500 to 700
+
+select m.*,c.city from members as m join cities as c on m.city_id=c.id where m.city_id in (2,5) and m.monthly_budget between 500 and 700 order by m.monthly_budget;
+
+#Query for data of cities and city id with total restaurants in the city 
+
+select city_id,count(restaurant_type_id) as "Total_restauarant_cities"from restaurants group by (city_id) order by city_id;
+
+#Query for data of order of different restaurant on date 2020-01-01
+
+select restaurant_id,count(date) from orders where date="2020-01-01" group by(restaurant_id) order by restaurant_id;
+
+#Query for joinig three table in order to get the related name and information 
+
+select m.hot_cold,m.meal_name,m.serve_type_id,od.*,st.serve_type from meals as m join order_details as od on od.meal_id=m.id join serve_types as st on m.serve_type_id=st.id where m.serve_type_id in (1,2,3);
